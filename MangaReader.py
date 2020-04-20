@@ -37,19 +37,17 @@ class reader(Frame):
         print_button = Button(self, text="Print Filename", command=self.printFile)
         next_button = Button(self, text = "NEXT PAGE", command=lambda: self.loadImage(1))
         prev_button = Button(self, text = "PREV PAGE", command=lambda: self.loadImage(-1))
-        img_button = Button(self, text="Print Images[]", command=lambda: print(self.images))
         
         prev_button.pack(side="bottom")
-        next_button.pack(side="bottom")
+        next_button.pack(side=BOTTOM)
         load_button.pack(side=LEFT)
         print_button.pack(side=LEFT)
-        img_button.pack(side=RIGHT)
         
         self.loadBook()
 
     def loadBook(self):
 
-        os.system("rm -rf cache")
+        os.system("del /Q /S cache")
 
         self.manga =  filedialog.askopenfilename(initialdir = os.getcwd, title = "Select file", filetypes = (("Manga or Comic Files",".cbr .cbz"),("all files","*.*")))
 
@@ -59,10 +57,13 @@ class reader(Frame):
                 book.extractall(self.path)
                 book.close()
             if(self.manga[-4::] == ".cbr"):
-                os.system("unrar x -ep {} {}/".format(self.manga,self.path))
+                if ( "Windows" in system):
+                    os.system("unrar x -ep {} {}\\".format(self.manga,self.path))
+                else:
+                    os.system("unrar x -ep {} {}/".format(self.manga,self.path))
 
-            self.images = os.listdir(self.path)
-            self.images.sort()
+            for file in os.scandir(self.path):
+                self.images.append(file.name)
 
             self.initImage()
 
@@ -79,7 +80,7 @@ class reader(Frame):
         if(self.cur_site > len(self.images)):
             self.cur_site = len(self.images)
 
-        tmp_img = Image.open("cache/{}".format(self.images[self.cur_site]))
+        tmp_img = Image.open(os.path.join("cache",self.images[self.cur_site]))
         tmp_img = tmp_img.resize((750,990))
         img = ImageTk.PhotoImage(tmp_img)
 
@@ -88,7 +89,7 @@ class reader(Frame):
         self.panel.pack(side = "bottom", fill = "both", expand = "yes")
         
     def initImage(self):
-        tmp_img = Image.open("cache/{}".format(self.images[0]))
+        tmp_img = Image.open(os.path.join("cache",self.images[self.cur_site]))
         tmp_img = tmp_img.resize((750,990))
         img = ImageTk.PhotoImage(tmp_img)
 
@@ -115,4 +116,8 @@ app = reader()
 root.mainloop()
 
 #clear the cache
-os.system("rm -rf cache")
+
+if ("Windows" in system):
+    os.system("del /Q /S cache")
+else:
+    os.system("rm -rf cache")
