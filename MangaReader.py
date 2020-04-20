@@ -6,8 +6,6 @@ import os, sys, platform
 
 system = platform.platform()
 
-print(system)
-
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #
 # The window class
@@ -16,7 +14,9 @@ print(system)
 class reader(Frame):
 
     def __init__(self):
-    
+        
+        super().__init__()
+        
         self.manga = 0
 
         self.path = os.path.join(os.getcwd(), "cache")
@@ -24,11 +24,7 @@ class reader(Frame):
         self.images = []
 
         self.cur_site = 0
-
-        super().__init__()
-
         
-
         self.pack()
 
         self.panel = Label(self)
