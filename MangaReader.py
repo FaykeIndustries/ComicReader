@@ -45,7 +45,7 @@ class reader(Frame):
 
         os.system("del /Q /S cache")
 
-        self.manga =  filedialog.askopenfilename(initialdir = os.getcwd, title = "Select file", filetypes = (("Manga or Comic Files",".cbr .cbz"),("all files","*.*")))
+        self.manga =  filedialog.askopenfilename(initialdir = os.getcwd(), title = "Select file", filetypes = (("Manga or Comic Files",".cbr .cbz"),("all files","*.*")))
 
         if (self.manga != 0):
             if(self.manga[-4::] == ".cbz"):
